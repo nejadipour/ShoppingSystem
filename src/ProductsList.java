@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 public class ProductsList
@@ -15,6 +16,37 @@ public class ProductsList
     public void removeProduct(Product product)
     {
         products.remove(product);
+
+    }
+
+
+    public void updateProduct(Product product, int num)
+    {
+        products.replace(product, num);
+
+    }
+
+
+    public Product findProduct(int index)
+    {
+        Iterator<Product> iterator = products.keySet().iterator();
+
+        int i = 0;
+
+        while(iterator.hasNext())
+        {
+            if (i == index - 1)
+            {
+                break;
+
+            }
+
+            iterator.next();
+            i++;
+
+        }
+
+        return iterator.next();
 
     }
 
