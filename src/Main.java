@@ -1,12 +1,21 @@
 import java.util.*;
 
+/**
+ * the system will run in this class
+ * @author Alireza Nejadipour
+ * @version 3.6
+ */
+
 public class Main
 {
-    private Inventory inventory;
-    private Basket basket;
-    private Scanner scanner;
+    private final Inventory inventory;
+    private final Basket basket;
+    private final Scanner scanner;
     private String command;
 
+    /**
+     * create a new Main
+     */
     public Main()
     {
         this.inventory = new Inventory();
@@ -15,6 +24,11 @@ public class Main
 
     }
 
+
+    /**
+     * adds new products to the inventory before the run
+     * @throws Exception if an error occurs within the method
+     */
     public void initInventory() throws Exception
     {
         Product product1 = new Product("Carrot", "Vegetables", 5, 20, "15-3-2020", "15-3-2021");
@@ -44,6 +58,9 @@ public class Main
     }
 
 
+    /**
+     * all the products in the inventory will be placed
+     */
     public void printProducts()
     {
         System.out.println(inventory.toString());
@@ -51,6 +68,10 @@ public class Main
     }
 
 
+    /**
+     * all the products in the basket will be placed
+     * then the total price will be printed
+     */
     public void printBasket()
     {
         System.out.println("Itemsincart:");
@@ -60,6 +81,9 @@ public class Main
     }
 
 
+    /**
+     * scans the input of user every time
+     */
     public void userCommand()
     {
         System.out.print("Your Command : ");
@@ -68,6 +92,11 @@ public class Main
     }
 
 
+    /**
+     * extracts numbers in the string
+     * @param input the string that number should be extracted from
+     * @return number will be returned
+     */
     public int numExtractor(String input)
     {
         return Integer.parseInt(input.replaceAll("[^0-9]", ""));
@@ -75,8 +104,23 @@ public class Main
     }
 
 
+    /**
+     * decides what to happen based on the user's command
+     * @throws Exception if an error occurs within the method
+     */
     public void handle() throws Exception
     {
+        /*
+        The system supports these key words :
+        add k : adds the product by index k from the inventory to the basket
+        remove k : removes the product by the index k from basket
+        cart : prints products in the basket
+        products : prints all the products in the inventory
+        change stock k : changes the stock of product with index k in the inventory
+        new product : if u wanna add a new product to the inventory u should type this keyword
+        completely delete k : deletes product with index k in the inventory from every where
+        checkout : your shop is done and the program is finished
+         */
         while (!command.equals("checkout"))
         {
             if (command.contains("add"))
@@ -122,19 +166,25 @@ public class Main
 
         }
 
+        // the message before exit
         System.out.println("It was a pleasure doing business with you.");
         System.exit(0);
 
     }
 
 
+    /**
+     * adds the product by index to the basket
+     * calls related methods
+     * @param index the index of the product in the list of products of the inventory
+     */
     public void addToBasket(int index)
     {
         Product product = inventory.findProduct(index);
 
         int stock = inventory.getProducts().get(product);
-        Integer count = basket.getProducts().get(product);
 
+        // check if there is any of the product in the inventory
         if (stock == 0)
         {
             System.out.println("Not available.");
@@ -152,6 +202,11 @@ public class Main
     }
 
 
+    /**
+     * removes the product by index from the basket
+     * calls related methods
+     * @param index the index of the product in the list of products of the basket
+     */
     public void removeFromBasket(int index)
     {
         Product product = basket.findProduct(index);
@@ -159,7 +214,7 @@ public class Main
         int stock = inventory.getProducts().get(product);
         Integer count = basket.getProducts().get(product);
 
-
+        // handle what to happen by the number of product in the basket
         if (count == 1)
         {
             basket.removeProduct(product);
@@ -167,7 +222,7 @@ public class Main
         }
         else
         {
-            System.out.print("Remove all of them? (y/n) : ");
+            System.out.print("Remove all of them? (y/n) : "); // input should be 'y' or 'n'
             if (scanner.next().equals("y"))
             {
                 basket.removeProduct(product);
@@ -193,13 +248,17 @@ public class Main
             }
 
         }
+
         inventory.updateProduct(product, stock + count);
         System.out.println("Product removed from basket.");
-
 
     }
 
 
+    /**
+     * scans the new stock and changes the stock of product by given index
+     * @param index the index of the product in the list of products of the inventory
+     */
     public void changeStock(int index)
     {
         Product product = inventory.findProduct(index);
@@ -214,7 +273,7 @@ public class Main
         }
         else
         {
-            inventory.changeStock(product, stock);
+            inventory.updateProduct(product, stock);
 
             System.out.println("Stock changed successfully.");
 
@@ -223,6 +282,11 @@ public class Main
     }
 
 
+    /**
+     * scans all details needed to make a new product
+     * and adds it to the list
+     * @throws Exception if an error occurs within the method
+     */
     public void newProduct() throws Exception
     {
         System.out.print("Enter the name : ");
@@ -250,6 +314,7 @@ public class Main
 
         if (product.checkDate())
         {
+            // check if the product is already available or not
             if (inventory.getProducts().get(product) == null)
             {
                 inventory.addProduct(product, stock);
@@ -273,6 +338,11 @@ public class Main
     }
 
 
+    /**
+     * removes the product by index from the inventory
+     * it removes the product if it is in the basket too
+     * @param index the index of the product in the list of products of the inventory
+     */
     public void completeDelete(int index)
     {
         Product product = inventory.findProduct(index);
@@ -288,6 +358,7 @@ public class Main
     {
         Main run = new Main();
         run.initInventory();
+        // first of all products should be printed
         run.printProducts();
         run.userCommand();
         run.handle();

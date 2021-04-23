@@ -2,10 +2,24 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * super class of classes Basket and Inventory
+ * contains HashMap of products
+ * the key is product
+ * if subclass is basket the value is the number of that product in the basket
+ * if subclass is inventory the value is product's stock
+ * common methods like remove, update or find are here
+ * @author Alireza Nejadipour
+ * @version 4.4
+ */
+
 public class ProductsList
 {
     protected HashMap<Product, Integer> products;
 
+    /**
+     * create a new ProductList
+     */
     public ProductsList()
     {
         products = new HashMap<>();
@@ -13,6 +27,10 @@ public class ProductsList
     }
 
 
+    /**
+     * gets the product and removes it from the list
+     * @param product the product that should be removed
+     */
     public void removeProduct(Product product)
     {
         products.remove(product);
@@ -20,6 +38,11 @@ public class ProductsList
     }
 
 
+    /**
+     * gets a product and updates its value in the HashMap
+     * @param product the key
+     * @param num new value
+     */
     public void updateProduct(Product product, int num)
     {
         products.replace(product, num);
@@ -27,6 +50,12 @@ public class ProductsList
     }
 
 
+    /**
+     * gets the index
+     * iterates through the HashMap and returns the product as key
+     * @param index the index of the element
+     * @return product will be returned
+     */
     public Product findProduct(int index)
     {
         Iterator<Product> iterator = products.keySet().iterator();
@@ -51,11 +80,14 @@ public class ProductsList
     }
 
 
+    /**
+     * all data of the list will be converted to a single string
+     * the method decides to write value in format of count or stock
+     * @return the string made by the method
+     */
     @Override
     public String toString()
     {
-        StringBuilder list = new StringBuilder();
-        int num = 1;
         Set<Product> productsKey = products.keySet();
 
         if (productsKey.size() == 0)
@@ -64,21 +96,25 @@ public class ProductsList
                 return "We are out of stock.";
 
             else
-                return "List is Empty.";
+                return "List is Empty."; // there is nothing in the basket
 
         }
+
+        // label is printed after each product and shows the value
+        String label = "";
+        if (this instanceof Inventory)
+            label = "instock";
+        else
+            label = "count";
+
+        StringBuilder list = new StringBuilder();
+        int num = 1;
 
         for (Product product : productsKey)
         {
             list.append(num).append(")").append(product.toString());
 
-            if (this instanceof Inventory)
-            {
-                list.append("instock: ").append(products.get(product));
-
-            }
-            else
-                list.append("count: ").append(products.get(product));
+            list.append(label).append(": ").append(products.get(product));
 
             list.append("\n");
 
@@ -90,6 +126,11 @@ public class ProductsList
 
     }
 
+
+    /**
+     * gets the HashMap of products and values
+     * @return the products field is returned
+     */
     public HashMap<Product, Integer> getProducts()
     {
         return products;
