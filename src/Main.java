@@ -87,7 +87,6 @@ public class Main
             else if (command.contains("remove"))
             {
                 removeFromBasket(numExtractor(command));
-                System.out.println("Product removed from basket.");
 
             }
             else if (command.equals("cart"))
@@ -129,36 +128,9 @@ public class Main
     }
 
 
-    public Product findProduct(int index, String listName)
-    {
-        Iterator<Product> iterator = inventory.getProducts().keySet().iterator();
-        if (listName.equals("basket"))
-            iterator = basket.getProducts().keySet().iterator();
-
-
-        int i = 0;
-
-        while(iterator.hasNext())
-        {
-            if (i == index - 1)
-            {
-                break;
-
-            }
-
-            iterator.next();
-            i++;
-
-        }
-
-        return iterator.next();
-
-    }
-
-
     public void addToBasket(int index)
     {
-        Product product = findProduct(index, "inventory");
+        Product product = inventory.findProduct(index);
 
         int stock = inventory.getProducts().get(product);
         Integer count = basket.getProducts().get(product);
@@ -171,7 +143,7 @@ public class Main
         else
         {
             basket.addProduct(product);
-            inventory.getProducts().replace(product, --stock);
+            inventory.updateProduct(product, --stock);
 
             System.out.println("Product added to basket successfully.");
 
@@ -182,23 +154,55 @@ public class Main
 
     public void removeFromBasket(int index)
     {
-        Product product = findProduct(index, "basket");
+        Product product = basket.findProduct(index);
 
         int stock = inventory.getProducts().get(product);
         Integer count = basket.getProducts().get(product);
 
-        if (count == null)
-            count = 0;
 
-        basket.removeProduct(product);
-        inventory.getProducts().replace(product, stock + count);
+        if (count == 1)
+        {
+            basket.removeProduct(product);
+
+        }
+        else
+        {
+            System.out.print("Remove all of them? (y/n) : ");
+            if (scanner.next().equals("y"))
+            {
+                basket.removeProduct(product);
+
+            }
+            else
+            {
+                System.out.print("Tell me how many of this product to remove : (from " + count + ") : ");
+                int inp = scanner.nextInt();
+                if (inp > count)
+                {
+                    System.out.println("Invalid input.");
+                    return;
+
+                }
+                else
+                {
+                    basket.updateProduct(product, count - inp);
+                    count = inp;
+
+                }
+
+            }
+
+        }
+        inventory.updateProduct(product, stock + count);
+        System.out.println("Product removed from basket.");
+
 
     }
 
 
     public void changeStock(int index)
     {
-        Product product = findProduct(index, "inventory");
+        Product product = inventory.findProduct(index);
 
         System.out.print("Enter the new stock of this product : ");
         int stock = scanner.nextInt();
@@ -254,7 +258,7 @@ public class Main
             }
             else
             {
-                inventory.getProducts().replace(product, stock);
+                inventory.updateProduct(product, stock);
                 System.out.println("Product updated.");
 
             }
@@ -271,7 +275,7 @@ public class Main
 
     public void completeDelete(int index)
     {
-        Product product = findProduct(index, "inventory");
+        Product product = inventory.findProduct(index);
 
         basket.removeProduct(product);
         inventory.removeProduct(product);
