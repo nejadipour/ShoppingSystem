@@ -11,7 +11,12 @@ public class ProductsList
 
     }
 
-    // TODO: ۲۳/۰۴/۲۰۲۱ methods needed to add or remove a product
+
+    public void removeProduct(Product product)
+    {
+        products.remove(product);
+
+    }
 
 
     @Override
@@ -19,8 +24,6 @@ public class ProductsList
     {
         StringBuilder list = new StringBuilder();
         int num = 1;
-
-
         Set<Product> productsKey = products.keySet();
 
         if (productsKey.size() == 0)
@@ -33,7 +36,6 @@ public class ProductsList
 
         }
 
-
         for (Product product : productsKey)
         {
             list.append(num).append(")").append(product.toString());
@@ -43,6 +45,8 @@ public class ProductsList
                 list.append("instock: ").append(products.get(product));
 
             }
+            else
+                list.append("count: ").append(products.get(product));
 
             list.append("\n");
 
@@ -51,6 +55,12 @@ public class ProductsList
         }
 
         return list.toString();
+
+    }
+
+    public HashMap<Product, Integer> getProducts()
+    {
+        return products;
 
     }
 
