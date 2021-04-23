@@ -27,9 +27,9 @@ public class Basket extends ProductsList
     }
 
 
-    public int totalPrice()
+    public float totalPrice()
     {
-        int total = 0;
+        float total = 0;
         Set<Product> productsKey = products.keySet();
 
         for (Product product : productsKey)
