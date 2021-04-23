@@ -10,32 +10,22 @@ public class Product
     private Date manufacture;
     private Date expiration;
     private final SimpleDateFormat dateFormat;
-    private int stock;
 
-    public Product(String name, String category, float weight, float price, String manufacture, String expiration, int stock) throws Exception
+
+    public Product(String name, String category, float weight, float price, String manufacture, String expiration) throws Exception
     {
         this.dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-        if (checkDate(dateFormat.parse(manufacture), dateFormat.parse(expiration)))
-        {
-            this.name = name;
-            this.category = category;
-            this.weight = weight;
-            this.price = price;
-            this.manufacture = dateFormat.parse(manufacture);
-            this.expiration = dateFormat.parse(expiration);
-            this.stock = stock;
-
-        }
-        else
-        {
-            System.out.println("Invalid date input.");
-
-        }
+        this.name = name;
+        this.category = category;
+        this.weight = weight;
+        this.price = price;
+        this.manufacture = dateFormat.parse(manufacture);
+        this.expiration = dateFormat.parse(expiration);
 
     }
 
-    public boolean checkDate(Date manufacture, Date expiration)
+    public boolean checkDate()
     {
         return !expiration.before(manufacture);
 
@@ -84,10 +74,6 @@ public class Product
     {
         return dateFormat.format(expiration);
 
-    }
-
-    public int getStock() {
-        return stock;
     }
 
 }
